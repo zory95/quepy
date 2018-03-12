@@ -47,7 +47,10 @@ class Word(object):
 
     def __unicode__(self):
         attrs = (getattr(self, name, u"-") for name in self._attrs)
-        return u"|".join(str(x) for x in attrs)
+        attrList = []
+        for x in attrs:
+            attrList.append(x if x is not None else "None")
+        return u"|".join(attrList)
 
     def __repr__(self):
         return unicode(self)

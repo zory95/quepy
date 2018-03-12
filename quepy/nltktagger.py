@@ -22,9 +22,7 @@ def run_nltktagger(string, nltk_data_path=None):
     words = []
     for sentence in parsed:
         for w in list(sentence):
-            word = Word(w.string)
-            word.pos = w.type
-            word.lemma = w.lemma
+            word = Word(w.string,pos=w.type,lemma=w.lemma)
             words.append(word)
 
     return words

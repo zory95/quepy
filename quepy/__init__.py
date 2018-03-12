@@ -18,5 +18,6 @@ from quepy.quepyapp import install, QuepyApp
 
 
 def set_loglevel(level=logging.WARNING):
+    logging.basicConfig(level=level)
     logger = logging.getLogger("quepy")
     logger.setLevel(level)
