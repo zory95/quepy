@@ -1,2 +1,7 @@
 *.pyc
 docs/_build/
+.idea/
+build/
+dist/
+quepy.egg-info/
+examples/opendata
