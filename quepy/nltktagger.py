@@ -15,8 +15,7 @@ Needed library: pattern
 from quepy.tagger import Word
 
 # Replace Spanish module to modify language
-from pattern.es import parsetree
-
+from pattern.text.es import parsetree
 def run_nltktagger(string, nltk_data_path=None):
     parsed = parsetree(string, lemmata=True)
     words = []
