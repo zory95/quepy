@@ -25,7 +25,9 @@ def escape(string):
     return string
 
 
+counter = 0
 def adapt(x):
+    global counter
     if isnode(x):
         x = u"?x{}".format(x)
         return x
@@ -33,20 +35,22 @@ def adapt(x):
         assert_valid_encoding(x)
         if x.startswith(u"\"") or ":" in x:
             return x
-        return u'"{}"'.format(x)
+        #return u'"{}"'.format(x)
+        ret = u'?aux{0} FILTER CONTAINS(lcase(str(?aux{0})),lcase("{1}"))'.format(counter, x)  # Attribute must contains the query ignoring case
+        counter += 1
+        return ret
     return unicode(x)
 
 
 def expression_to_sparql(e, full=False):
+    global counter
+    counter = 0
     template = u"{preamble}\n" +\
                u"SELECT DISTINCT {select} WHERE {{\n" +\
                u"{expression}\n" +\
                u"}}\n"
-    head = adapt(e.get_head())
-    if full:
-        select = u"*"
-    else:
-        select = head
+    # head = adapt(e.get_head())
+
     y = 0
     xs = []
     for node in e.iter_nodes():
@@ -56,10 +60,19 @@ def expression_to_sparql(e, full=False):
                 y += 1
             xs.append(triple(adapt(node), relation, adapt(dest),
                       indentation=1))
+
+    targets = [adapt(x) for x in e.get_targets()]
+    for i in range(counter):
+        targets.append("?aux{}".format(i))
+    if full:
+        select = u"*"
+    else:
+        select = " ".join(targets)
+
     sparql = template.format(preamble=settings.SPARQL_PREAMBLE,
                              select=select,
                              expression=u"\n".join(xs))
-    return select, sparql
+    return targets, sparql
 
 
 def triple(a, p, b, indentation=0):

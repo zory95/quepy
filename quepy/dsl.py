@@ -25,17 +25,21 @@ class FixedRelation(Expression):
 
     relation = None
     reverse = False
+    addTarget = False
 
-    def __init__(self, destination, reverse=None):
+    def __init__(self, destination, reverse=None, addTarget=None):
         if reverse is None:
             reverse = self.reverse
+        if addTarget is None:
+            addTarget = self.addTarget
         super(FixedRelation, self).__init__()
         if self.relation is None:
             raise ValueError("You *must* define the `relation` "
                              "class attribute to use this class.")
         self.nodes = copy(destination.nodes)
         self.head = destination.head
-        self.decapitate(self.relation, reverse)
+        self.targets = destination.targets
+        self.decapitate(self.relation, reverse, addTarget)
 
 
 class FixedType(Expression):
@@ -66,8 +70,9 @@ class FixedDataRelation(Expression):
 
     relation = None
     language = None
+    addTarget = False
 
-    def __init__(self, data):
+    def __init__(self, data, addTarget=None):
         super(FixedDataRelation, self).__init__()
         if self.relation is None:
             raise ValueError("You *must* define the `relation` "
@@ -77,6 +82,10 @@ class FixedDataRelation(Expression):
             self.language = encoding_flexible_conversion(self.language)
             data = u"\"{0}\"@{1}".format(data, self.language)
         self.add_data(self.relation, data)
+        if addTarget is None:
+            addTarget = self.addTarget
+        if addTarget:
+            self.targets.append(self.head)
 
 
 class HasKeyword(FixedDataRelation):

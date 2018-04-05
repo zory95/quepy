@@ -104,6 +104,7 @@ class Expression(object):
         """
         self.nodes = []
         self.head = self._add_node()
+        self.targets = []
 
     def _add_node(self):
         """
@@ -119,6 +120,9 @@ class Expression(object):
         Returns the index (the unique identifier) of the head node.
         """
         return self.head
+
+    def get_targets(self):
+        return self.targets
 
     def merge(self, other):
         """
@@ -136,7 +140,7 @@ class Expression(object):
                     dest = translation[dest]
                 xs.append((relation, dest))
 
-    def decapitate(self, relation, reverse=False):
+    def decapitate(self, relation, reverse=False, addTarget=False):
         """
         Creates a new blank node and makes it the ``head`` of the
         Expression. Then it adds an edge (a ``relation``) linking the
@@ -148,6 +152,8 @@ class Expression(object):
         """
         oldhead = self.head
         self.head = self._add_node()
+        if(addTarget):
+            self.targets.append(self.head)
         if reverse:
             self.nodes[oldhead].append((relation, self.head))
         else:
