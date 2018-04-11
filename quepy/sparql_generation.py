@@ -36,7 +36,8 @@ def adapt(x):
         if x.startswith(u"\"") or ":" in x:
             return x
         #return u'"{}"'.format(x)
-        ret = u'?aux{0} FILTER CONTAINS(lcase(str(?aux{0})),lcase("{1}"))'.format(counter, x)  # Attribute must contains the query ignoring case
+        ret = u'?aux{0}. ?a{0} ?b{0} ?aux{0}. ?aux{0} bif:contains "\'{1}\'"'.format(counter, x)  # Attribute must contains the query ignoring case
+        #ret = u'?aux{0} FILTER CONTAINS(lcase(str(?aux{0})),lcase("{1}"))'.format(counter, x)  # Attribute must contains the query ignoring case
         counter += 1
         return ret
     return unicode(x)
